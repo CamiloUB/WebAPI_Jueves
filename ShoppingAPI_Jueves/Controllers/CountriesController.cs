@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Any;
 using ShoppingAPI_Jueves.DAL.Entities;
 using ShoppingAPI_Jueves.Domain.Interfaces;
 using System.Collections.Generic;
@@ -37,8 +38,8 @@ namespace ShoppingAPI_Jueves.Controllers
             return Ok(countries); // 200 Http Code
         }
 
-        [HttpPost, ActionName("Post")]
-        [Route("Post")] // Aquí concateno la URL incial
+        [HttpPost, ActionName("Create")]
+        [Route("Create")] // Aquí concateno la URL incial
         public async Task<ActionResult> CreateCountryAsync(Country country)
 
         {
@@ -59,12 +60,33 @@ namespace ShoppingAPI_Jueves.Controllers
             {
                 if (ex.Message.Contains("duplicate"))
                 {
-                    return Conflict(String.Format("El país{0} ya existe.", country.Name));
+                    return Conflict(String.Format("El país {0} ya existe.", country.Name)); // 409
                 }
                 return Conflict(ex.Message);
             }
             
             }
+        [HttpGet, ActionName("Get")]
+        [Route("Get/{id}")] // Aquí concateno la URL incial
+        public async Task<ActionResult> GetCountryByIdAsync(Guid id)
+        {
+            if (id == null)
+            {
+                return BadRequest("Id es requerido"); //
+            }
+
+            var country = await _countryService.GetCountryByIdAsync(id);
+            
+            if (country == null)
+            {
+              return NotFound();
+             }
+
+            return Ok(country); // 200
+
+
+
+        }
 
         }
     }

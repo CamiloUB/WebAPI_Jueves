@@ -7,6 +7,10 @@ namespace ShoppingAPI_Jueves.Domain.Interfaces
         Task<IEnumerable<Country>> GetCountriesAsync();
 
         Task<Country> CreateCountrysAsync(Country country);
-    
+
+        Task<Country> GetCountryByIdAsync(Guid Id);
+
+
+
     }
 }

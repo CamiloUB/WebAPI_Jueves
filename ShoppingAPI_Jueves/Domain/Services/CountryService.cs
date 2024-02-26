@@ -2,6 +2,7 @@
 using ShoppingAPI_Jueves.DAL;
 using ShoppingAPI_Jueves.DAL.Entities;
 using ShoppingAPI_Jueves.Domain.Interfaces;
+using System.Diagnostics.Metrics;
 
 namespace ShoppingAPI_Jueves.Domain.Services
 {
@@ -12,15 +13,15 @@ namespace ShoppingAPI_Jueves.Domain.Services
 
         public CountryService(DataBaseContext context)
         {
-                _context = context; 
+            _context = context;
         }
 
         public async Task<IEnumerable<Country>> GetCountriesAsync()
         {
 
-         
-         // Aquí se trae la lista de países
-          return await _context.Countries.ToListAsync();
+
+            // Aquí se trae la lista de países
+            return await _context.Countries.ToListAsync();
 
         }
 
@@ -46,6 +47,16 @@ namespace ShoppingAPI_Jueves.Domain.Services
             }
         }
 
-      
+        public async Task<Country> GetCountryByIdAsync(Guid id)
+        {
+
+           // return await _context.Countries.FirstAsync(x => x.Id == id); // FindAsync método del
+                                                                         // DbContext (DbSet)
+
+            return await _context.Countries.FirstOrDefaultAsync(c => c.Id == id);
+
+        }
     }
-}
+    }
+
+
