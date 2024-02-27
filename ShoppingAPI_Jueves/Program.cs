@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
    ("DefaultConnection")));
 
 builder.Services.AddScoped<ICountryService, CountryService>();
+// builder.Services.AddScoped<IStateService, StateService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

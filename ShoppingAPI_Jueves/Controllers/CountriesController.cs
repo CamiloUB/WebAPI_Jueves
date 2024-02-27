@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Any;
 using ShoppingAPI_Jueves.DAL.Entities;
 using ShoppingAPI_Jueves.Domain.Interfaces;
-using System.Collections.Generic;
 
 namespace ShoppingAPI_Jueves.Controllers
 {
@@ -21,16 +18,16 @@ namespace ShoppingAPI_Jueves.Controllers
         // En Controller los métodos son acciones, y en API se denominan End Points
         // Todo EP retorna un Action Results.
 
-         [HttpGet, ActionName("Get")]
-         [Route("Get")] // Aquí concateno la URL incial
-       
+        [HttpGet, ActionName("Get")]
+        [Route("Getall")] // Aquí concateno la URL incial
+
         public async Task<ActionResult<IEnumerable<Country>>> GetCountriesAsync()
 
         {
             // Yendo a capa Domain para traer la lista de países
             var countries = await _countryService.GetCountriesAsync();
 
-            if (countries == null || !countries.Any()) 
+            if (countries == null || !countries.Any())
             {
                 return NotFound(); // 404 Http Code
             }
@@ -46,17 +43,17 @@ namespace ShoppingAPI_Jueves.Controllers
             try
 
             {
-                var createdCountry = await _countryService.CreateCountrysAsync(country);
+                var createdCountry = await _countryService.CreateCountryAsync(country);
 
-                if (createdCountry == null) 
+                if (createdCountry == null)
                 {
                     return NotFound(); // 404
                 }
 
                 return Ok(createdCountry); // 200
             }
-        
-            catch (Exception ex) 
+
+            catch (Exception ex)
             {
                 if (ex.Message.Contains("duplicate"))
                 {
@@ -64,10 +61,10 @@ namespace ShoppingAPI_Jueves.Controllers
                 }
                 return Conflict(ex.Message);
             }
-            
-            }
+
+        }
         [HttpGet, ActionName("Get")]
-        [Route("Get/{id}")] // Aquí concateno la URL incial
+        [Route("GetById/{id}")] // Aquí concateno la URL incial
         public async Task<ActionResult> GetCountryByIdAsync(Guid id)
         {
             if (id == null)
@@ -76,19 +73,85 @@ namespace ShoppingAPI_Jueves.Controllers
             }
 
             var country = await _countryService.GetCountryByIdAsync(id);
-            
+
             if (country == null)
             {
-              return NotFound();
-             }
+                return NotFound();
+            }
 
-            return Ok(country); // 200
+            return Ok(country);
+        }
+
+
+        [HttpGet, ActionName("Get")]
+        [Route("GetByName/{name}")] // Aquí concateno la URL incial
+        public async Task<ActionResult> GetCountryByNameAsync(string name)
+        {
+            if (name == null)
+            {
+                return BadRequest("Name es requerido"); //
+            }
+
+            var country = await _countryService.GetCountryByNameAsync(name);
+
+            if (country == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(country);
+        }
+
+
+        [HttpPut, ActionName("Edit")]
+        [Route("Edit")] // Aquí concateno la URL incial
+        public async Task<ActionResult<Country>> EditCountryAsync(Country country)
+
+        {
+            try
+
+            {
+                var editedCountry = await _countryService.EditCountryAsync(country);
+
+                if (editedCountry == null)
+                {
+                    return NotFound(); // 404
+                }
+
+                return Ok(editedCountry); // 200
+            }
+
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("duplicate"))
+                {
+                    return Conflict(String.Format("El país {0} ya existe.", country.Name)); // 409
+                }
+                return Conflict(ex.Message);
+            }
 
 
 
         }
 
+        [HttpDelete, ActionName("Delete")]
+        [Route("Delete")] // Aquí concateno la URL incial
+        public async Task<ActionResult<Country>> DeleteCountryAsync(Guid id)
+
+        {
+            if (id == null) return BadRequest("Id es requerido");
+
+            var deletedCountry = await _countryService.DeleteCountryAsync(id);
+
+            if (deletedCountry == null) return NotFound("país no encontrado"); // 200
+
+            return Ok(deletedCountry);
+
         }
+
+        // No se hace Try and Catch porque no estoy trayendo el objeto
+
     }
+}
 
 

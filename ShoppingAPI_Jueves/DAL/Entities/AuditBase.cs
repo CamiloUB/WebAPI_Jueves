@@ -7,8 +7,6 @@ namespace ShoppingAPI_Jueves.DAL.Entities
 
         [Key] // Pk
         [Required] // Pk
-
-
         public virtual Guid Id { get; set; } // PK de todas las tablas
 
         public virtual DateTime? CreatedDate { get; set; }

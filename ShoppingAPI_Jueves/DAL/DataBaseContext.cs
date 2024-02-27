@@ -15,11 +15,17 @@ namespace ShoppingAPI_Jueves.DAL
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Country>().HasIndex(c => c.Name).IsUnique();
+            
+            // Indices compuestos
+            modelBuilder.Entity<State>().HasIndex("Name", "CountryId").IsUnique();
+
+
         }
 
         #region DbSets
 
         public DbSet<Country> Countries { get; set; }
+        public DbSet<State> States { get; set; }
         // public DbSet<City> Cities { get; set; }
         // public DbSet<User> Users { get; set; }
 

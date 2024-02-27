@@ -9,5 +9,9 @@ namespace ShoppingAPI_Jueves.DAL.Entities
         [MaxLength(50, ErrorMessage = "El campo{0} debe tener máximo {1} caracteres. ")]
         [Required]
         public string Name { get; set; }
+
+        [Display(Name = "Estados/Provincias")]
+        public ICollection<State>? States { get; set; } // Esta es la relación entre entidades
+
     }
 }
