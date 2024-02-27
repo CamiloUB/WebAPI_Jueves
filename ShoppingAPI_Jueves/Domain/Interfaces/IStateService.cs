@@ -5,7 +5,15 @@ namespace ShoppingAPI_Jueves.Domain.Interfaces
     public interface IStateService
     {
 
-        Task<State> CreateCountrysAsync(Country country);
+        Task<IEnumerable<State>> GetStatesByCountryIdAsync(Guid countryId);
+
+        Task<State> CreateStateAsync(State state, Guid countryId);
+
+        Task<State> GetStateByIdAsync(Guid id);
+
+        Task<State> EditStateAsync(State state, Guid id);
+
+        Task<State> DeleteStateAsync(Guid id);
 
     }
 }
